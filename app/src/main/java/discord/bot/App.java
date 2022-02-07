@@ -3,13 +3,12 @@ package discord.bot;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.util.Locale;
 
 import javax.security.auth.login.LoginException;
 
 import net.dv8tion.jda.api.*;
-import net.dv8tion.jda.api.events.*;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.EventListener;
 
 public class App
 {
