@@ -53,7 +53,7 @@ public class Command extends ListenerAdapter {
             event.getMessage().delete().queue();
         }
 
-        if (msg.indexOf("!vote kick") == 0) {
+        if (msg.indexOf("!vote kick ") == 0) {
             var toKick = event.getMessage().getMentionedMembers().stream().findAny().orElse(null);
             if (toKick != null) {
                 long votingTime = 30;
@@ -66,36 +66,76 @@ public class Command extends ListenerAdapter {
             }
         }
 
-        if (msg.indexOf("!roll") == 0) {
-            String diceString = msg.substring(5).strip();
-            if (diceString.toLowerCase().startsWith("d")) diceString = "1" + diceString;
-            String[] dice = diceString.split("d|D");
-            if (dice.length == 2) {
-                int howManyDice = 0;
-                int dieKind = 0;
-                try {
-                    howManyDice = Integer.parseInt(dice[0]);
-                    dieKind = Integer.parseInt(dice[1]);
-                } catch (NumberFormatException ex) {
-                    event.getChannel().sendMessage("Zly format, sproboj\n!roll [1-200]d[1-1000]").queue();
-                    return;
-                }
-                if (howManyDice < 1 || howManyDice > 200) {
-                    event.getChannel().sendMessage("Mozna kulac tylko 1-200 kostek").queue();
-                    return;
-                } else if (dieKind < 1 || dieKind > 1000) {
-                    event.getChannel().sendMessage("Wspierane tylko d1 - d1000").queue();
-                    return;
-                }
-                int[] results = new int[howManyDice];
-                for (int i = 0; i < howManyDice; i++) {
-                    results[i] = new Random().nextInt(dieKind) + 1;
-                }
-                StringBuilder msgToReturn = new StringBuilder("Wyniki: \n");
-                for (int i = 0; i < howManyDice; i++) msgToReturn.append(results[i] + ", ");
-                msgToReturn.append("\nw sumie: ")
-                .append(IntStream.of(results).sum());
-                event.getChannel().sendMessage(msgToReturn.toString()).queue();
+        if (msg.toLowerCase().indexOf("!roll ") == 0) {
+            String rollMsg = getRollMsg(msg.substring(6).toLowerCase());
+            event.getChannel().sendMessage(rollMsg).queue();
+        }
+    }
+
+    private String getRollMsg(String commandParams) {
+        if (commandParams.toLowerCase().startsWith("d"))
+            commandParams = "1" + commandParams;
+
+        DiceRollInfo diceInfo = new DiceRollInfo(commandParams);
+
+        if (!diceInfo.isFormatCorrect())
+            return "Zly format, sproboj\n!roll [1-200]d[1-1000]";
+
+        if (diceInfo.howManyDice() < 1 || diceInfo.howManyDice() > 200)
+            return "Mozna kulac tylko 1-200 kostek";
+
+        if (diceInfo.dieType() < 1 || diceInfo.dieType() > 1000)
+            return "Wspierane tylko d1 - d1000";
+
+        int[] results = IntStream.range(0, diceInfo.howManyDice())
+                .map(i -> new Random().nextInt(diceInfo.dieType) + 1).toArray();
+
+        return "Wyniki: \n" + Arrays.stream(results).mapToObj(Integer::toString).collect(Collectors.joining(", "))
+                + "\nw sumie: " + Arrays.stream(results).sum();
+    }
+
+    private class DiceRollInfo {
+        private final int howManyDice;
+        private final int dieType;
+        private boolean isFormatCorrect = true;
+
+        public DiceRollInfo(String rawDiceString) {
+            if (rawDiceString.lastIndexOf("d") != rawDiceString.indexOf("d"))
+                isFormatCorrect = false;
+            String[] parts = rawDiceString.split("d");
+
+            Integer howManyDiceInteger = null;
+            Integer dieTypeInteger = null;
+            try {
+                howManyDiceInteger = toIntOrNull(parts[0]);
+                dieTypeInteger = toIntOrNull(parts[1]);
+            } catch (IndexOutOfBoundsException ex) {
+                isFormatCorrect = false;
+            }
+
+            howManyDice = howManyDiceInteger != null ? howManyDiceInteger : 0;
+            dieType = dieTypeInteger != null ? dieTypeInteger : 0;
+
+            isFormatCorrect = isFormatCorrect && dieTypeInteger != null && howManyDiceInteger != null;
+        }
+
+        public int howManyDice() {
+            return howManyDice;
+        }
+
+        public int dieType() {
+            return dieType;
+        }
+
+        public boolean isFormatCorrect() {
+            return isFormatCorrect;
+        }
+
+        private Integer toIntOrNull(String numAsString) {
+            try {
+                return Integer.parseInt(numAsString);
+            } catch (NumberFormatException ex) {
+                return null;
             }
         }
     }
