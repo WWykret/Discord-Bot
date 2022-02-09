@@ -1,9 +1,13 @@
 package discord.bot;
 
+import java.util.Arrays;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -43,7 +47,7 @@ public class Command extends ListenerAdapter {
                     .sendMessage("kocham jave kocham jave kocham jave " + Emojis.JAVA_SOCIAL_CREDITS).queue();
         }
 
-        if (msg.replace(" ", "").contains("31")) {
+        if (msg.replace(" ", "").contains("31") && !event.getAuthor().isBot()) {
             event.getChannel()
                     .sendMessage("wykryto i usunieto nielegalny numer " + Emojis.ALBANIAN_WAR_CRIMES).queue();
             event.getMessage().delete().queue();
@@ -59,6 +63,39 @@ public class Command extends ListenerAdapter {
                             addEmojisToVoting(m).queue();
                             queueWithDelay(() -> countVotesAndKickIfNessescary(channel, m, toKick), votingTime);
                         });
+            }
+        }
+
+        if (msg.indexOf("!roll") == 0) {
+            String diceString = msg.substring(5).strip();
+            if (diceString.toLowerCase().startsWith("d")) diceString = "1" + diceString;
+            String[] dice = diceString.split("d|D");
+            if (dice.length == 2) {
+                int howManyDice = 0;
+                int dieKind = 0;
+                try {
+                    howManyDice = Integer.parseInt(dice[0]);
+                    dieKind = Integer.parseInt(dice[1]);
+                } catch (NumberFormatException ex) {
+                    event.getChannel().sendMessage("Zly format, sproboj\n!roll [1-200]d[1-1000]").queue();
+                    return;
+                }
+                if (howManyDice < 1 || howManyDice > 200) {
+                    event.getChannel().sendMessage("Mozna kulac tylko 1-200 kostek").queue();
+                    return;
+                } else if (dieKind < 1 || dieKind > 1000) {
+                    event.getChannel().sendMessage("Wspierane tylko d1 - d1000").queue();
+                    return;
+                }
+                int[] results = new int[howManyDice];
+                for (int i = 0; i < howManyDice; i++) {
+                    results[i] = new Random().nextInt(dieKind) + 1;
+                }
+                StringBuilder msgToReturn = new StringBuilder("Wyniki: \n");
+                for (int i = 0; i < howManyDice; i++) msgToReturn.append(results[i] + ", ");
+                msgToReturn.append("\nw sumie: ")
+                .append(IntStream.of(results).sum());
+                event.getChannel().sendMessage(msgToReturn.toString()).queue();
             }
         }
     }
