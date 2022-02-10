@@ -3,11 +3,11 @@ package discord.bot;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.util.Locale;
 
 import javax.security.auth.login.LoginException;
 
+import discord.bot.commands.*;
+import discord.bot.commands.voting.KickVotingCommand;
 import net.dv8tion.jda.api.*;
 
 public class App
@@ -21,9 +21,18 @@ public class App
             token = "";
         }
 
+        //Registered commands       
+        Object[] registeredCommands = {
+            new ILoveJavaCommand(),
+            new DeleteIllegalNumberCommand(),
+            new KickVotingCommand(),
+            new RollCommand(),
+            new ReactOnReadyCommand()
+        };
+
         // Note: It is important to register your ReadyListener before building
         JDA jda = JDABuilder.createDefault(token)
-            .addEventListeners(new Command())
+            .addEventListeners(registeredCommands)
             .build();
 
         // optionally block until JDA is ready
