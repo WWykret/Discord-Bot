@@ -18,15 +18,15 @@ public class App
 
     private static JDA jda;
 
-    private static String token;
+    // private static String token;
 
     public static void main(String[] args) throws LoginException, InterruptedException
     {
-        try {
-            token = Files.readString(Paths.get("token"));
-        } catch (IOException e) {
-            token = "";
-        }
+        // try {
+        //     token = Files.readString(Paths.get("token"));
+        // } catch (IOException e) {
+        //     token = "";
+        // }
 
         registerCommand(new ILoveJavaCommand());
         // registerCommand(new DeleteIllegalNumberCommand());
@@ -40,7 +40,7 @@ public class App
 
     public static void buildJDA() throws LoginException, InterruptedException {
         // Note: It is important to register your ReadyListener before building
-        jda = JDABuilder.createDefault(token)
+        jda = JDABuilder.createDefault(System.getenv("TOKEN"))
             .addEventListeners(registeredCommands.toArray())
             .build();
 
