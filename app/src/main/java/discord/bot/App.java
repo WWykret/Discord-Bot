@@ -40,6 +40,9 @@ public class App
 
     public static void buildJDA() throws LoginException, InterruptedException {
         // Note: It is important to register your ReadyListener before building
+        // for (var env : System.getenv().keySet()) {
+        //     System.out.println(env);
+        // }
         jda = JDABuilder.createDefault(System.getenv("TOKEN"))
             .addEventListeners(registeredCommands.toArray())
             .build();
