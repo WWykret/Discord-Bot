@@ -7,9 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import discord.bot.Emojis;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -60,8 +58,6 @@ public class SnipeCommand extends BotCommand {
             storedChannelMsgs.set(storedChannelMsgs.size() - 1, message);
         }
         storedMsgs.put(msgsIndex, storedChannelMsgs);
-        // System.out.println(storedChannelMsgs.stream().map(m -> m.getContentRaw() + ";" + m.getIdLong()).toList());
-        // System.out.println("------------------------------------");
     }
 
     private Message getDeletedMsg(Guild guild, MessageChannel channel) {
@@ -75,9 +71,6 @@ public class SnipeCommand extends BotCommand {
 
     private RestAction<Message> resendDeletedMessage(MessageChannel channel, Message deletedMsg){
         var embedBuilder = new EmbedBuilder();
-
-        // embedBuilder.setTitle("Usunieta Wiadomosc");
-        // embedBuilder.setDescription("Ktos tutaj usunal wiadomosc " + Emojis.ALBANIAN_WAR_CRIMES);
 
         embedBuilder.setAuthor(deletedMsg.getAuthor().getName(), null, deletedMsg.getAuthor().getAvatarUrl());
 
