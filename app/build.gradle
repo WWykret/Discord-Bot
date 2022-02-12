@@ -8,7 +8,8 @@ project.setProperty("mainClassName", "discord.bot.App")
 
 version 1.0
 
-sourceCompatibility = JavaVersion.VERSION_17
+// sourceCompatibility = JavaVersion.VERSION_17
+java.runtime.version = 17
 
 repositories {
     // Use Maven Central for resolving dependencies.
