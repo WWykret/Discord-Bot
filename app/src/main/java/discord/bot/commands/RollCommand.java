@@ -5,6 +5,8 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import discord.bot.CommandPermissions;
+import discord.bot.CommandPermissions.Permission;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class RollCommand extends BotCommand {
@@ -14,6 +16,11 @@ public class RollCommand extends BotCommand {
         String msg = event.getMessage().getContentDisplay();
 
         if (msg.toLowerCase().indexOf(commandPrefix + "roll ") == 0) {
+            if (!CommandPermissions.hasPermission(event.getGuild(), event.getMember(), Permission.USER)) {
+                CommandPermissions.sendLackOfAccessMsg(event.getChannel());
+                return;
+            }
+            
             String rollMsg = getRollMsg(msg.substring(6).toLowerCase());
             event.getChannel().sendMessage(rollMsg).queue();
         }

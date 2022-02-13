@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import discord.bot.CommandPermissions;
+import discord.bot.CommandPermissions.Permission;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
@@ -37,6 +39,11 @@ public class SnipeCommand extends BotCommand {
         String msg = event.getMessage().getContentDisplay();
 
         if (msg.toLowerCase().equals(commandPrefix + "snipe")) {
+            if (!CommandPermissions.hasPermission(event.getGuild(), event.getMember(), Permission.USER)) {
+                CommandPermissions.sendLackOfAccessMsg(event.getChannel());
+                return;
+            }
+
             Message deletedMsg = getDeletedMsg(event.getGuild(), event.getChannel());
             if (deletedMsg != null) {
                 resendDeletedMessage(event.getChannel(), deletedMsg).queue();

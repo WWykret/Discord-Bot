@@ -2,7 +2,9 @@ package discord.bot.commands.voting;
 
 import java.util.concurrent.TimeUnit;
 
+import discord.bot.CommandPermissions;
 import discord.bot.Emojis;
+import discord.bot.CommandPermissions.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -16,10 +18,14 @@ public class KickVotingCommand extends VotingCommand {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (!event.getMember().getRoles().contains(event.getGuild().getRoleById("726433682566545448"))) return;
 
         String msg = event.getMessage().getContentRaw();
         if (msg.indexOf(commandPrefix + "vote kick ") == 0) {
+            if (!CommandPermissions.hasPermission(event.getGuild(), event.getMember(), Permission.MODERATION)) {
+                CommandPermissions.sendLackOfAccessMsg(event.getChannel());
+                return;
+            }
+            
             var toKickUser = event.getMessage().getMentionedUsers().stream().findAny().orElse(null);
             
             if (toKickUser != null) {
