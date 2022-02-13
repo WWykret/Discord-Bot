@@ -1,8 +1,5 @@
 package discord.bot;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +30,7 @@ public class App
         registerCommand(new KickVotingCommand());
         registerCommand(new RollCommand());
         registerCommand(new SnipeCommand());
+        registerCommand(new ReminderCommand());
         registerCommand(new ReactOnReadyCommand());
 
         buildJDA();
