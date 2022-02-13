@@ -31,6 +31,7 @@ public class App
         registerCommand(new RollCommand());
         registerCommand(new SnipeCommand());
         registerCommand(new ReminderCommand());
+        registerCommand(new HangmanCommand());
         registerCommand(new ReactOnReadyCommand());
 
         buildJDA();
