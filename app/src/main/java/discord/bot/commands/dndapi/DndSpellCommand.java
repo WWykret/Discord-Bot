@@ -1,11 +1,17 @@
 package discord.bot.commands.dndapi;
 
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.MalformedInputException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import discord.bot.CommandPermissions;
@@ -17,45 +23,74 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class DndSpellCommand extends BotCommand {
 
-    private static final String API_ENDPOINT = "https://www.dnd5eapi.co/api/";
+    private static final String API_ENDPOINT = "https://www.dnd5eapi.co/api/spells/";
 
     public void onMessageReceived(MessageReceivedEvent event) {
 
         String msg = event.getMessage().getContentDisplay();
 
-        if (msg.toLowerCase().equals(commandPrefix + "spell")) {
+        if (msg.toLowerCase().indexOf(commandPrefix + "spell") == 0) {
             if (!CommandPermissions.hasPermission(event.getGuild(), event.getMember(), Permission.USER)) {
                 CommandPermissions.sendLackOfAccessMsg(event.getChannel());
                 return;
             }
             
-            var jsonMapper = new ObjectMapper();
-            try {
-                String testString = getCallResultAsString("acid-arrow");
-                SpellData testClassInstance = jsonMapper.readValue(testString, SpellData.class);
-                event.getChannel().sendMessageEmbeds(SpellEmbedGenerator.generateSpellEmbed(testClassInstance)).queue();
-                testString = getCallResultAsString("acid-splash");
-                testClassInstance = jsonMapper.readValue(testString, SpellData.class);
-                event.getChannel().sendMessageEmbeds(SpellEmbedGenerator.generateSpellEmbed(testClassInstance)).queue();
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            String[] args = msg.split("\\s+", 2);
+            if (args.length != 2) {
+                event.getChannel().sendMessage("Musisz podac nazwe zaklecia").queue();
+                return;
             }
+
+            String spellIndex = getSpellIndex(args[1]);
+
+            String spellJsonString = getSpellInfoAsString(spellIndex);
+
+            if (spellJsonString == null) {
+                event.getChannel().sendMessage("Nie znaleziono zaklecia o takiej nazwie").queue();
+                return;
+            }
+
+            MessageEmbed spellInfoEmbed = getEmbedFromJson(spellJsonString);
+            if (spellInfoEmbed != null) event.getChannel().sendMessageEmbeds(spellInfoEmbed).queue();
         }
     }
 
-    private String getCallResultAsString(String spellIndex) throws Exception{
-        // URL url = new URL(API_ENDPOINT + "spells/acid-arrow");
-        URL url = new URL(API_ENDPOINT + "spells/" + spellIndex);
-        // HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        var result = new StringBuilder();
-        InputStream stream = url.openStream();
-        int byteRead = stream.read();
-        while(byteRead != -1) {
-            result.append((char) byteRead);
-            byteRead = stream.read();
+    private String getSpellIndex(String spellName) {
+        spellName = spellName.toLowerCase();
+        spellName = spellName.replaceAll("\\s+", " "); //replace multipla spaces
+        spellName = spellName.replace(" ", "-");
+        return spellName;
+    }
+
+    private String getSpellInfoAsString(String spellIndex) {
+        try {
+            URL url = new URL(API_ENDPOINT + spellIndex);
+            var result = new StringBuilder();
+            InputStream stream = url.openStream();
+            int byteRead = stream.read();
+            while(byteRead != -1) {
+                result.append((char) byteRead);
+                byteRead = stream.read();
+            }
+            return result.toString();
+        } catch (FileNotFoundException e) {
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
-        return result.toString();
+    }
+
+    private MessageEmbed getEmbedFromJson(String jsonString) {
+        var jsonMapper = new ObjectMapper();
+        
+        try {
+            SpellData spellDataInstance = jsonMapper.readValue(jsonString, SpellData.class);
+            return SpellEmbedGenerator.generateSpellEmbed(spellDataInstance);
+        } catch (JsonProcessingException ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 }
 
