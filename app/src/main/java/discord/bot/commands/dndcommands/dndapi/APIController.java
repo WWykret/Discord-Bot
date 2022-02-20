@@ -78,4 +78,12 @@ public class APIController {
             return null;
         }
     }
+
+    public static String getIndexFromName(String name) {
+        name = name.strip();
+        name = name.toLowerCase();
+        name = name.replaceAll("\\s+", " "); //replace multiple spaces
+        name = name.replace(" ", "-");
+        return name;
+    }
 }

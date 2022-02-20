@@ -11,14 +11,13 @@ public record ArmorData(
     String index,
     String name,
     @JsonProperty("equipment_category") APIReference equipmentCategory,
-    @JsonProperty("armor_category") APIReference armorCategory,
+    @JsonProperty("armor_category") String armorCategory,
     @JsonProperty("armor_class") ArmorClass armorClass,
     @JsonProperty("str_minimum") int minStrength,
     @JsonProperty("stealth_disadvantage") boolean stealthDisadvantage,
     int weight,
     Cost cost,
     String url
-
 ) implements EquipmentData {}
 
 @JsonIgnoreProperties(ignoreUnknown = true)

@@ -32,7 +32,7 @@ public class DndSpellCommand extends BotCommand {
                 return;
             }
 
-            String spellIndex = getSpellIndex(args[1]);
+            String spellIndex = APIController.getIndexFromName(args[1]);
             var spellData = APIController.getSpellDataWithIndex(spellIndex);
 
             if (spellData == null) {
@@ -43,13 +43,6 @@ public class DndSpellCommand extends BotCommand {
             MessageEmbed spellInfoEmbed = SpellEmbedGenerator.generateSpellEmbed(spellData);
             if (spellInfoEmbed != null) event.getChannel().sendMessageEmbeds(spellInfoEmbed).queue();
         }
-    }
-
-    private String getSpellIndex(String spellName) {
-        spellName = spellName.toLowerCase();
-        spellName = spellName.replaceAll("\\s+", " "); //replace multipla spaces
-        spellName = spellName.replace(" ", "-");
-        return spellName;
     }
 }
 
