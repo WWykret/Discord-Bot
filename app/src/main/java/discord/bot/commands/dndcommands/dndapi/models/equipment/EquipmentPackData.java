@@ -13,6 +13,6 @@ public record EquipmentPackData(
     @JsonProperty("equipment_category") APIReference equipmentCategory,
     @JsonProperty("gear_category") APIReference gearCategory,
     Cost cost,
-    APIReference[] contents,
+    EquipmentPackContent[] contents,
     String url
 ) implements EquipmentData {}

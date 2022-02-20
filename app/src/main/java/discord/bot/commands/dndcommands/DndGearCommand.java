@@ -10,6 +10,7 @@ import discord.bot.commands.BotCommand;
 import discord.bot.commands.dndcommands.dndapi.APIController;
 import discord.bot.commands.dndcommands.dndapi.models.APIReference;
 import discord.bot.commands.dndcommands.dndapi.models.equipment.ArmorData;
+import discord.bot.commands.dndcommands.dndapi.models.equipment.EquipmentPackContent;
 import discord.bot.commands.dndcommands.dndapi.models.equipment.EquipmentPackData;
 import discord.bot.commands.dndcommands.dndapi.models.equipment.GearData;
 import discord.bot.commands.dndcommands.dndapi.models.equipment.WeaponDamage;
@@ -49,8 +50,9 @@ public class DndGearCommand extends BotCommand {
 
             if (gearData instanceof WeaponData) gearInfoEmbed = WeaponEmbedGenerator.generateEmbed((WeaponData) gearData);
             else if (gearData instanceof ArmorData) gearInfoEmbed = ArmorEmbedGenerator.generateEmbed((ArmorData) gearData);
-            else if (gearData instanceof GearData) System.out.println("GEAR");
-            else if (gearData instanceof EquipmentPackData) System.out.println("EQP");
+            else if (gearData instanceof GearData) gearInfoEmbed = GearEmbedGenerator.generateEmbed((GearData) gearData);
+            else if (gearData instanceof EquipmentPackData) 
+                gearInfoEmbed = EquipmentPackEmbedGenerator.generateEmbed((EquipmentPackData) gearData);
 
             if (gearInfoEmbed != null) event.getChannel().sendMessageEmbeds(gearInfoEmbed).queue();
         }
@@ -198,5 +200,60 @@ class ArmorEmbedGenerator {
         if (minStr <= 0) return;
 
         builder.addField("Minimum Strength Needed", String.valueOf(minStr), false);
+    }
+}
+
+class GearEmbedGenerator {
+    
+    public static MessageEmbed generateEmbed(GearData gearData) {
+        var builder = new EmbedBuilder();
+
+        builder.setTitle(gearData.name());
+        builder.setColor(0xba8200);
+
+        setWeightInfo(gearData, builder);
+
+        builder.addField("Cost", gearData.cost().toString(), false);
+
+        return builder.build();
+    }
+
+    private static void setWeightInfo(GearData gearData, EmbedBuilder builder) {
+        int weight = gearData.weight();
+
+        builder.addField("Weight", String.valueOf(weight), false);
+    }
+}
+
+class EquipmentPackEmbedGenerator {
+    
+    public static MessageEmbed generateEmbed(EquipmentPackData equipmentPackData) {
+        var builder = new EmbedBuilder();
+
+        builder.setTitle(equipmentPackData.name());
+        builder.setColor(0xf159ff);
+
+        setContentsInfo(equipmentPackData, builder);
+
+        builder.addField("Cost", equipmentPackData.cost().toString(), false);
+
+        return builder.build();
+    }
+
+    private static void setContentsInfo(EquipmentPackData gearData, EmbedBuilder builder) {
+        var contents = gearData.contents();
+
+        if (contents == null) return;
+
+        var contentsInfoBuilder = new StringBuilder();
+
+        for (EquipmentPackContent content : contents) {
+            contentsInfoBuilder.append(content.item().name());
+            int quantity = content.quantity();
+            if (quantity > 1) contentsInfoBuilder.append(" x" + quantity);
+            contentsInfoBuilder.append("\n");
+        }
+
+        builder.addField("Contents", contentsInfoBuilder.toString(), false);
     }
 }
