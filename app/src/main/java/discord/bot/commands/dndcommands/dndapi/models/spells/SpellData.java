@@ -1,7 +1,9 @@
-package discord.bot.commands.dndcommands.dndapi.models;
+package discord.bot.commands.dndcommands.dndapi.models.spells;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import discord.bot.commands.dndcommands.dndapi.models.APIReference;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record SpellData(
@@ -27,8 +29,8 @@ public record SpellData(
 
 record Damage(
     @JsonProperty("damage_type") DamageType dmgType,
-    @JsonProperty("damage_at_character_level") DamageAtLevel dmgAtCharacterLevel,
-    @JsonProperty("damage_at_slot_level") DamageAtLevel dmgAtSpellslotLevel
+    @JsonProperty("damage_at_character_level") SpellDamageAtLevel dmgAtCharacterLevel,
+    @JsonProperty("damage_at_slot_level") SpellDamageAtLevel dmgAtSpellslotLevel
 ) {}
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -38,7 +40,7 @@ record DamageType(
 ) {}
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-record DamageAtLevel(
+record SpellDamageAtLevel(
     @JsonProperty("1") String lvl1Dmg,
     @JsonProperty("2") String lvl2Dmg,
     @JsonProperty("3") String lvl3Dmg,

@@ -8,7 +8,7 @@ import java.net.URL;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import discord.bot.commands.dndcommands.dndapi.models.SpellData;
+import discord.bot.commands.dndcommands.dndapi.models.spells.SpellData;
 
 public class APIController {
     private static final String API_ENDPOINT = "https://www.dnd5eapi.co/api/spells/";

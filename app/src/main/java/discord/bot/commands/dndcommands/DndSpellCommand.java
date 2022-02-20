@@ -9,7 +9,7 @@ import discord.bot.CommandPermissions.Permission;
 import discord.bot.commands.BotCommand;
 import discord.bot.commands.dndcommands.dndapi.APIController;
 import discord.bot.commands.dndcommands.dndapi.models.APIReference;
-import discord.bot.commands.dndcommands.dndapi.models.SpellData;
+import discord.bot.commands.dndcommands.dndapi.models.spells.SpellData;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
