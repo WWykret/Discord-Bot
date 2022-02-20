@@ -2,7 +2,6 @@ package discord.bot.commands.dndcommands;
 
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 import discord.bot.CommandPermissions;
 import discord.bot.CommandPermissions.Permission;

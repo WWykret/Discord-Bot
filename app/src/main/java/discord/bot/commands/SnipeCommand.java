@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import discord.bot.CommandPermissions;
+import discord.bot.HelpSupport;
 import discord.bot.CommandPermissions.Permission;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -16,7 +17,7 @@ import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.RestAction;
 
-public class SnipeCommand extends BotCommand {
+public class SnipeCommand extends BotCommand implements HelpSupport{
 
     private Map<Pair<Guild,MessageChannel>, Long> lastDeleted = new HashMap<>();
     
@@ -87,6 +88,21 @@ public class SnipeCommand extends BotCommand {
         embedBuilder.setColor(0xff0000);
 
         return channel.sendMessageEmbeds(embedBuilder.build());
+    }
+
+    @Override
+    public String commandName() {
+        return "snipe";
+    }
+
+    @Override
+    public String commandUsage() {
+        return ".snipe";
+    }
+
+    @Override
+    public String helpMessage() {
+        return "Pokazuje ostatnia usunieta wiadomosc na kanale";
     }
 }
 

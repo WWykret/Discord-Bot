@@ -36,6 +36,7 @@ public class App
         registerCommand(new HangmanCommand());
         registerCommand(new DndSpellCommand());
         registerCommand(new DndGearCommand());
+        registerCommand(new HelpCommand(registeredCommands));
         registerCommand(new ReactOnReadyCommand());
 
         buildJDA();

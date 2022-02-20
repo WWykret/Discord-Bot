@@ -3,7 +3,7 @@ package discord.bot.commands;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-public class BotCommand extends ListenerAdapter {
+public abstract class BotCommand extends ListenerAdapter {
     
     protected String commandPrefix = ".";
 
