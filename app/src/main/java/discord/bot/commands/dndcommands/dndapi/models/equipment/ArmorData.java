@@ -19,10 +19,3 @@ public record ArmorData(
     Cost cost,
     String url
 ) implements EquipmentData {}
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-record ArmorClass(
-    int base,
-    @JsonProperty("dex_bonus") boolean dexBonus,
-    @JsonProperty("max_bonus") Integer maxBonus
-) {}

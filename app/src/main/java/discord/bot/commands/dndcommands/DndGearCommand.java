@@ -48,7 +48,7 @@ public class DndGearCommand extends BotCommand {
             MessageEmbed gearInfoEmbed = null;
 
             if (gearData instanceof WeaponData) gearInfoEmbed = WeaponEmbedGenerator.generateEmbed((WeaponData) gearData);
-            else if (gearData instanceof ArmorData) System.out.println("ARMOR");
+            else if (gearData instanceof ArmorData) gearInfoEmbed = ArmorEmbedGenerator.generateEmbed((ArmorData) gearData);
             else if (gearData instanceof GearData) System.out.println("GEAR");
             else if (gearData instanceof EquipmentPackData) System.out.println("EQP");
 
@@ -142,5 +142,61 @@ class WeaponEmbedGenerator {
 
         rangeBuilder.append(")");
         return rangeBuilder.toString();
+    }
+}
+
+class ArmorEmbedGenerator {
+    
+    public static MessageEmbed generateEmbed(ArmorData armorData) {
+        var builder = new EmbedBuilder();
+
+        builder.setTitle(armorData.name());
+        builder.setColor(0x444444);
+        
+        setArmorCategoryInfo(armorData, builder);
+        setArmorClassInfo(armorData, builder);
+        setStealthInfo(armorData, builder);
+        setMinStrengthInfo(armorData, builder);
+
+        builder.addField("Cost", armorData.cost().toString(), false);
+
+        return builder.build();
+    }
+
+    private static void setArmorCategoryInfo(ArmorData armorData, EmbedBuilder builder) {
+        String category = armorData.armorCategory();
+
+        if (category == null) return;
+
+        builder.addField("Armor Type", category, false);
+    }
+
+    private static void setArmorClassInfo(ArmorData armorData, EmbedBuilder builder) {
+        var ac = armorData.armorClass();
+
+        if (ac == null) return;
+
+        var acInfoBuilder = new StringBuilder();
+        
+        acInfoBuilder.append(ac.base());
+
+        if (ac.dexBonus()) acInfoBuilder.append(" + DEX");
+        if (ac.maxBonus() != null) acInfoBuilder.append(" (max " + (ac.base() + ac.maxBonus()) + ")");
+
+        builder.addField("Armor Class", acInfoBuilder.toString(), false);
+    }
+
+    private static void setStealthInfo(ArmorData armorData, EmbedBuilder builder) {
+        boolean stealthDisadvantage = armorData.stealthDisadvantage();
+
+        builder.addField("Gives Stealth Disadvantage", stealthDisadvantage ? "Yes" : "No", false);
+    }
+
+    private static void setMinStrengthInfo(ArmorData armorData, EmbedBuilder builder) {
+        int minStr = armorData.minStrength();
+
+        if (minStr <= 0) return;
+
+        builder.addField("Minimum Strength Needed", String.valueOf(minStr), false);
     }
 }
