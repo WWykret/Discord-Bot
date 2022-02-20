@@ -6,9 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import discord.bot.commands.dndcommands.dndapi.models.APIReference;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record BasicEquipmentData(
+public record BasicEquipmentData (
     String index,
     String name,
-    @JsonProperty("equipment_category") APIReference eqipmentCategory,
+    @JsonProperty("equipment_category") APIReference equipmentCategory,
     @JsonProperty("gear_category") APIReference gearCategory
-) {}
+) implements EquipmentData {}

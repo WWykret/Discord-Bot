@@ -10,9 +10,9 @@ import discord.bot.commands.dndcommands.dndapi.models.Cost;
 public record GearData(
     String index,
     String name,
-    @JsonProperty("equipment_category") APIReference eqipmentCategory,
+    @JsonProperty("equipment_category") APIReference equipmentCategory,
     @JsonProperty("gear_category") APIReference gearCategory,
     int weight,
     Cost cost,
     String url
-) {}
+) implements EquipmentData {}

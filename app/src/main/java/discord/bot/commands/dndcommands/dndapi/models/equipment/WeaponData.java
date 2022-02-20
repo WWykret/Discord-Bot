@@ -10,7 +10,7 @@ import discord.bot.commands.dndcommands.dndapi.models.Cost;
 public record WeaponData(
     String index,
     String name,
-    @JsonProperty("equipment_category") APIReference eqipmentCategory,
+    @JsonProperty("equipment_category") APIReference equipmentCategory,
     @JsonProperty("weapon_category") String weaponCategory,
     @JsonProperty("weapon_range") String weaponRange,
     @JsonProperty("category_range") String weaponCategoryRange,
@@ -21,7 +21,7 @@ public record WeaponData(
     int weight,
     APIReference[] properties,
     String url 
-) {}
+) implements EquipmentData {}
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)

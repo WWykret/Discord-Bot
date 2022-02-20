@@ -10,7 +10,7 @@ import discord.bot.commands.dndcommands.dndapi.models.Cost;
 public record ArmorData(
     String index,
     String name,
-    @JsonProperty("equipment_category") APIReference eqipmentCategory,
+    @JsonProperty("equipment_category") APIReference equipmentCategory,
     @JsonProperty("armor_category") APIReference armorCategory,
     @JsonProperty("armor_class") ArmorClass armorClass,
     @JsonProperty("str_minimum") int minStrength,
@@ -19,7 +19,7 @@ public record ArmorData(
     Cost cost,
     String url
 
-) {}
+) implements EquipmentData {}
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 record ArmorClass(
