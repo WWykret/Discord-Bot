@@ -12,8 +12,9 @@ import discord.bot.commands.dndcommands.dndapi.models.APIReference;
 import discord.bot.commands.dndcommands.dndapi.models.equipment.ArmorData;
 import discord.bot.commands.dndcommands.dndapi.models.equipment.EquipmentPackData;
 import discord.bot.commands.dndcommands.dndapi.models.equipment.GearData;
+import discord.bot.commands.dndcommands.dndapi.models.equipment.WeaponDamage;
 import discord.bot.commands.dndcommands.dndapi.models.equipment.WeaponData;
-import discord.bot.commands.dndcommands.dndapi.models.spells.SpellData;
+import discord.bot.commands.dndcommands.dndapi.models.equipment.WeaponRange;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -44,12 +45,102 @@ public class DndGearCommand extends BotCommand {
                 return;
             }
 
-            // MessageEmbed spellInfoEmbed = SpellEmbedGenerator.generateSpellEmbed(spellData);
-            // if (spellInfoEmbed != null) event.getChannel().sendMessageEmbeds(spellInfoEmbed).queue();
-            if (gearData instanceof WeaponData) System.out.println("WEAPON");
+            MessageEmbed gearInfoEmbed = null;
+
+            if (gearData instanceof WeaponData) gearInfoEmbed = WeaponEmbedGenerator.generateEmbed((WeaponData) gearData);
             else if (gearData instanceof ArmorData) System.out.println("ARMOR");
             else if (gearData instanceof GearData) System.out.println("GEAR");
             else if (gearData instanceof EquipmentPackData) System.out.println("EQP");
+
+            if (gearInfoEmbed != null) event.getChannel().sendMessageEmbeds(gearInfoEmbed).queue();
         }
+    }
+}
+
+class WeaponEmbedGenerator {
+    
+    public static MessageEmbed generateEmbed(WeaponData weaponData) {
+        var builder = new EmbedBuilder();
+
+        builder.setTitle(weaponData.name());
+        builder.setColor(0xdd0000);
+
+        setRangeAndCategoryInfo(builder, weaponData);
+        setBasicDamageInfo(builder, weaponData);
+        setWeaponPropertiesInfo(builder, weaponData);
+        
+        builder.addField("Cost", weaponData.cost().toString(), false);
+
+        return builder.build();
+    }
+
+    private static void setRangeAndCategoryInfo(EmbedBuilder builder, WeaponData weaponData) {
+        String rangeAsString = weaponData.weaponRange();
+        var rangeAsObject = weaponData.range();
+        String category = weaponData.weaponCategory();
+
+        if (rangeAsString == null || rangeAsObject == null || category == null) return;
+
+        StringBuilder rangeAndCategoryMsg = new StringBuilder();
+
+        rangeAndCategoryMsg.append(category + ", ");
+
+        rangeAndCategoryMsg.append(rangeAsString + " ");
+        rangeAndCategoryMsg.append(getRangeString(rangeAsObject));
+
+        builder.addField("Type", rangeAndCategoryMsg.toString(), false);
+    }
+
+    private static void setBasicDamageInfo(EmbedBuilder builder, WeaponData weaponData) {
+        var damageInfo = weaponData.damage();
+
+        if (damageInfo == null) return;
+        
+        builder.addField("Damage", getDamageString(damageInfo), false);
+    }
+
+    private static void setWeaponPropertiesInfo (EmbedBuilder builder, WeaponData weaponData) {
+        var properties = Arrays.stream(weaponData.properties()).map(APIReference::name).toList();
+        var twoHandedDmg = weaponData.twoHandedDamage();
+        var thrownRange = weaponData.throwRange();
+
+
+        if (properties == null) return;
+
+        var propertiesInfo = new StringBuilder();
+        for (String property : properties) {
+            propertiesInfo.append(property);
+            
+            String propertyAdditionalInfo = switch(property) {
+                case "Versatile" -> " - " + getDamageString(twoHandedDmg);
+                case "Thrown" -> " " + getRangeString(thrownRange);
+                default -> "";
+            };
+
+            propertiesInfo.append(propertyAdditionalInfo);
+            propertiesInfo.append("\n");
+        }
+
+        builder.addField("Properties", propertiesInfo.toString(), false);
+    }
+
+    private static String getDamageString(WeaponDamage damage) {
+        if (damage == null) return "";        
+        
+        return damage.damageDice() + " (" + damage.damageType().name() + ")";
+    }
+
+    private static String getRangeString(WeaponRange range) {
+        if (range == null) return "";        
+        
+        var rangeBuilder = new StringBuilder();
+
+        rangeBuilder.append("(" + range.normalRange() + " ft");
+        
+        Integer longRange = range.longRange();
+        if (longRange != null) rangeBuilder.append(" / " + longRange + " ft");
+
+        rangeBuilder.append(")");
+        return rangeBuilder.toString();
     }
 }

@@ -20,18 +20,6 @@ public record WeaponData(
     WeaponRange range,
     int weight,
     APIReference[] properties,
+    @JsonProperty("throw_range") WeaponRange throwRange,
     String url 
 ) implements EquipmentData {}
-
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-record WeaponDamage(
-    @JsonProperty("damage_dice") String damageDice,
-    @JsonProperty("damage_type") APIReference damageType
-) {}
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-record WeaponRange(
-    @JsonProperty("normal") Integer normalRange,
-    @JsonProperty("long") Integer longRange
-) {}
