@@ -6,7 +6,7 @@ import java.util.List;
 import javax.security.auth.login.LoginException;
 
 import discord.bot.commands.*;
-import discord.bot.commands.dndapi.DndSpellCommand;
+import discord.bot.commands.dndcommands.DndSpellCommand;
 import discord.bot.commands.voting.KickVotingCommand;
 import net.dv8tion.jda.api.*;
 

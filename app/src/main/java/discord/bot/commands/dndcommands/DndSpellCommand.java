@@ -1,29 +1,20 @@
-package discord.bot.commands.dndapi;
+package discord.bot.commands.dndcommands;
 
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.charset.MalformedInputException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import discord.bot.CommandPermissions;
 import discord.bot.CommandPermissions.Permission;
 import discord.bot.commands.BotCommand;
+import discord.bot.commands.dndcommands.dndapi.APIController;
+import discord.bot.commands.dndcommands.dndapi.models.APIReference;
+import discord.bot.commands.dndcommands.dndapi.models.SpellData;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class DndSpellCommand extends BotCommand {
-
-    private static final String API_ENDPOINT = "https://www.dnd5eapi.co/api/spells/";
 
     public void onMessageReceived(MessageReceivedEvent event) {
 
@@ -42,15 +33,14 @@ public class DndSpellCommand extends BotCommand {
             }
 
             String spellIndex = getSpellIndex(args[1]);
+            var spellData = APIController.getSpellDataWithIndex(spellIndex);
 
-            String spellJsonString = getSpellInfoAsString(spellIndex);
-
-            if (spellJsonString == null) {
+            if (spellData == null) {
                 event.getChannel().sendMessage("Nie znaleziono zaklecia o takiej nazwie").queue();
                 return;
             }
 
-            MessageEmbed spellInfoEmbed = getEmbedFromJson(spellJsonString);
+            MessageEmbed spellInfoEmbed = SpellEmbedGenerator.generateSpellEmbed(spellData);
             if (spellInfoEmbed != null) event.getChannel().sendMessageEmbeds(spellInfoEmbed).queue();
         }
     }
@@ -60,37 +50,6 @@ public class DndSpellCommand extends BotCommand {
         spellName = spellName.replaceAll("\\s+", " "); //replace multipla spaces
         spellName = spellName.replace(" ", "-");
         return spellName;
-    }
-
-    private String getSpellInfoAsString(String spellIndex) {
-        try {
-            URL url = new URL(API_ENDPOINT + spellIndex);
-            var result = new StringBuilder();
-            InputStream stream = url.openStream();
-            int byteRead = stream.read();
-            while(byteRead != -1) {
-                result.append((char) byteRead);
-                byteRead = stream.read();
-            }
-            return result.toString();
-        } catch (FileNotFoundException e) {
-            return null;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private MessageEmbed getEmbedFromJson(String jsonString) {
-        var jsonMapper = new ObjectMapper();
-        
-        try {
-            SpellData spellDataInstance = jsonMapper.readValue(jsonString, SpellData.class);
-            return SpellEmbedGenerator.generateSpellEmbed(spellDataInstance);
-        } catch (JsonProcessingException ex) {
-            ex.printStackTrace();
-            return null;
-        }
     }
 }
 

@@ -1,6 +1,5 @@
-package discord.bot.commands.dndapi;
+package discord.bot.commands.dndcommands.dndapi.models;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -87,11 +86,4 @@ record DamageAtLevel(
         };
     }
 }
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-record APIReference(
-    String index,
-    String name,
-    String url
-) {}
 
