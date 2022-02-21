@@ -7,12 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import discord.bot.CommandPermissions;
+import discord.bot.HelpSupport;
 import discord.bot.CommandPermissions.Permission;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public class ReminderCommand extends BotCommand {
+public class ReminderCommand extends BotCommand implements HelpSupport{
     private final int maxRemindersPerUser = 5;
     private Map<User, Integer> reminderCounder = new HashMap<>();
 
@@ -84,5 +85,20 @@ public class ReminderCommand extends BotCommand {
         if (currentReminders > 0) reminderCounder.put(user, currentReminders - 1);
 
         channel.sendMessageFormat("<@%s> przypominam o:\n%s", user.getId(), message).queue();
+    }
+
+    @Override
+    public String commandName() {
+        return "remind";
+    }
+
+    @Override
+    public String commandUsage() {
+        return ".remind <ilosc czasu> [s|min|h|d] <wiadomosc do przypomnienia>";
+    }
+
+    @Override
+    public String helpMessage() {
+        return "Przypomina o wiadomosci po uplywie okreslonego czasu.";
     }
 }

@@ -6,10 +6,11 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import discord.bot.CommandPermissions;
+import discord.bot.HelpSupport;
 import discord.bot.CommandPermissions.Permission;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public class RollCommand extends BotCommand {
+public class RollCommand extends BotCommand implements HelpSupport {
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
 
@@ -48,6 +49,21 @@ public class RollCommand extends BotCommand {
 
         return "Wyniki: \n" + Arrays.stream(results).mapToObj(Integer::toString).collect(Collectors.joining(", "))
                 + "\nw sumie: " + Arrays.stream(results).sum();
+    }
+
+    @Override
+    public String commandName() {
+        return "roll";
+    }
+
+    @Override
+    public String commandUsage() {
+        return ".roll {1-200}d[1-1000]";
+    }
+
+    @Override
+    public String helpMessage() {
+        return "Kula podana liczba kostek o podanej liczbie scian - pokazuje poszczegolne rzuty oraz sume.";
     }
 }
 

@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import discord.bot.CommandPermissions;
 import discord.bot.Emojis;
+import discord.bot.HelpSupport;
 import discord.bot.CommandPermissions.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -12,7 +13,7 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.RestAction;
 
-public class KickVotingCommand extends VotingCommand {
+public class KickVotingCommand extends VotingCommand implements HelpSupport {
 
     private long votingTime = 60L;
 
@@ -67,5 +68,20 @@ public class KickVotingCommand extends VotingCommand {
                 .sendMessageFormat("Kickujemy %s? (%d s na glosowanie)", memberToKick, howManySecsForVoting)
                 .map(msgA -> msgA.getIdLong())
                 .flatMap(id -> channel.retrieveMessageById(id));
+    }
+
+    @Override
+    public String commandName() {
+        return "vote kick";
+    }
+
+    @Override
+    public String commandUsage() {
+        return ".vote kick @<osoba do kickowania>";
+    }
+
+    @Override
+    public String helpMessage() {
+        return "Powoduje glosowanie, czy zkikowac oznaczana osobe z serwera. Wymaga rangi `bot-moderation`.";
     }
 }

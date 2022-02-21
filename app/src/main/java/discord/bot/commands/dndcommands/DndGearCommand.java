@@ -4,6 +4,7 @@ package discord.bot.commands.dndcommands;
 import java.util.Arrays;
 
 import discord.bot.CommandPermissions;
+import discord.bot.HelpSupport;
 import discord.bot.CommandPermissions.Permission;
 import discord.bot.commands.BotCommand;
 import discord.bot.commands.dndcommands.dndapi.APIController;
@@ -19,7 +20,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public class DndGearCommand extends BotCommand {
+public class DndGearCommand extends BotCommand implements HelpSupport {
 
     public void onMessageReceived(MessageReceivedEvent event) {
 
@@ -55,6 +56,21 @@ public class DndGearCommand extends BotCommand {
 
             if (gearInfoEmbed != null) event.getChannel().sendMessageEmbeds(gearInfoEmbed).queue();
         }
+    }
+
+    @Override
+    public String commandName() {
+        return "gear";
+    }
+
+    @Override
+    public String commandUsage() {
+        return ".gear <nazwa przedmiotu>";
+    }
+
+    @Override
+    public String helpMessage() {
+        return "Pokazuje podstawowe informacje o podanym przedmiocie z D&D";
     }
 }
 

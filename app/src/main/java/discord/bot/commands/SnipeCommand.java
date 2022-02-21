@@ -102,7 +102,7 @@ public class SnipeCommand extends BotCommand implements HelpSupport{
 
     @Override
     public String helpMessage() {
-        return "Pokazuje ostatnia usunieta wiadomosc na kanale";
+        return "Pokazuje ostatnia usunieta wiadomosc na kanale.";
     }
 }
 

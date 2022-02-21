@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import discord.bot.CommandPermissions;
+import discord.bot.HelpSupport;
 import discord.bot.CommandPermissions.Permission;
 import discord.bot.commands.BotCommand;
 import discord.bot.commands.dndcommands.dndapi.APIController;
@@ -14,7 +15,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public class DndSpellCommand extends BotCommand {
+public class DndSpellCommand extends BotCommand implements HelpSupport {
 
     public void onMessageReceived(MessageReceivedEvent event) {
 
@@ -43,6 +44,21 @@ public class DndSpellCommand extends BotCommand {
             MessageEmbed spellInfoEmbed = SpellEmbedGenerator.generateSpellEmbed(spellData);
             if (spellInfoEmbed != null) event.getChannel().sendMessageEmbeds(spellInfoEmbed).queue();
         }
+    }
+
+    @Override
+    public String commandName() {
+        return "spell";
+    }
+
+    @Override
+    public String commandUsage() {
+        return ".spell <nazwa zaklecia>";
+    }
+
+    @Override
+    public String helpMessage() {
+        return "Pokazuje informacje o podanym zakleciu z D&D";
     }
 }
 

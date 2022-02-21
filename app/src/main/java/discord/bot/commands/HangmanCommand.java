@@ -1,6 +1,8 @@
 package discord.bot.commands;
 
 import discord.bot.CommandPermissions;
+import discord.bot.HelpSupport;
+
 import static discord.bot.CommandPermissions.Permission.USER;
 
 import java.io.IOException;
@@ -18,7 +20,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public class HangmanCommand extends BotCommand {
+public class HangmanCommand extends BotCommand implements HelpSupport {
 
     private static final int maxLives = 10;
 
@@ -176,5 +178,22 @@ public class HangmanCommand extends BotCommand {
             else result.append("\\_ ");
         }
         return result.toString();
+    }
+
+    @Override
+    public String commandName() {
+        return "hangman";
+    }
+
+    @Override
+    public String commandUsage() {
+        return """
+        .hangman start
+        .hangman guess [litera|haslo]""";
+    }
+
+    @Override
+    public String helpMessage() {
+        return "pozwala rozpoczac i prowadzic gre w wisielca z botem.";
     }
 }
