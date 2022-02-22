@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import discord.bot.commands.memecommands.memeapi.models.MemeData;
+import discord.bot.commands.memecommands.memeapi.models.MemesListData;
 
 public class MemeAPIController {
     private static final String API_URL = "https://meme-api.herokuapp.com/gimme";
@@ -22,7 +23,8 @@ public class MemeAPIController {
         if (jsonString == null) return null;
 
         try {
-            return jsonMapper.readValue(jsonString, MemeData.class);
+            MemesListData memesList = jsonMapper.readValue(jsonString, MemesListData.class);
+            return memesList.memes()[0];
         } catch (JsonProcessingException ex) {
             ex.printStackTrace();
             return null;
@@ -33,6 +35,7 @@ public class MemeAPIController {
         try {
             String memeApiUrl = API_URL;
             if (subreddit != null) memeApiUrl += "/" + subreddit;
+            memeApiUrl += "/1";
 
             URL url = new URL(memeApiUrl);
             var result = new StringBuilder();
