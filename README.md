@@ -59,6 +59,7 @@ The program was written in Java using Java Discord API for communication with di
 
 It additionally uses
 - [D&D 5e API](https://www.dnd5eapi.co/) for getting information about D&D items and spells
+- [Meme API](https://github.com/D3vd/Meme_Api) for getting images from reddit
 - Jackson JSON processor for managing json
 
 ## Currently avilable commands
@@ -73,6 +74,7 @@ List bellow includes all commands that are avilable in current version of the ap
 - `Roll` - allows users to roll a different kind of dice
 - `Snipe` - allows users to display last deleted message on the channel
 - `Kick Voting` - allows moderation to create voting whether or not kick someone from the server
+- `Meme` - displays random meme from reddit
 - `Spell` - retrives info about spells from D&D 5e API
 - `Gear` - retrives info about equipment from D&D 5e API
 
@@ -83,6 +85,7 @@ Messages generated with `Help` command follow the following convention
 - `{a|b|c}` - exacly one of items `a` or `b` or `c` or nothing
 - `{1-50}` - exacly one integer from range `0` to `50` or nothing
 - `<something>` - whatever is written inside `<>`
+- `{something}` - whatever is written inside `{}` or nothing
 
 ## Status
 
