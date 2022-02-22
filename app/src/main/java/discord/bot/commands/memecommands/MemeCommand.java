@@ -1,6 +1,7 @@
 package discord.bot.commands.memecommands;
 
 import discord.bot.CommandPermissions;
+import discord.bot.HelpSupport;
 import discord.bot.CommandPermissions.Permission;
 import discord.bot.commands.BotCommand;
 import discord.bot.commands.memecommands.memeapi.MemeAPIController;
@@ -9,7 +10,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public class MemeCommand extends BotCommand {
+public class MemeCommand extends BotCommand implements HelpSupport {
     public void onMessageReceived(MessageReceivedEvent event) {
 
         String msg = event.getMessage().getContentDisplay().toLowerCase().strip();
@@ -30,6 +31,21 @@ public class MemeCommand extends BotCommand {
             if (memeData != null) memeEmbed = MemeEmbedBuilder.generateMemeEmbed(memeData);
             if (memeEmbed != null) event.getChannel().sendMessageEmbeds(memeEmbed).queue();
         }
+    }
+
+    @Override
+    public String commandName() {
+        return "meme";
+    }
+
+    @Override
+    public String commandUsage() {
+        return ".meme {subreddit}";
+    }
+
+    @Override
+    public String helpMessage() {
+        return "Zwraca losowy mem z reddita, jesli podano to z konkretnego subreddita.";
     }
 }
 
