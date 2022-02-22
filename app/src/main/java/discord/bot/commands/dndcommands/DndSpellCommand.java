@@ -8,7 +8,7 @@ import discord.bot.CommandPermissions;
 import discord.bot.HelpSupport;
 import discord.bot.CommandPermissions.Permission;
 import discord.bot.commands.BotCommand;
-import discord.bot.commands.dndcommands.dndapi.APIController;
+import discord.bot.commands.dndcommands.dndapi.DnDAPIController;
 import discord.bot.commands.dndcommands.dndapi.models.APIReference;
 import discord.bot.commands.dndcommands.dndapi.models.spells.SpellData;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -33,8 +33,8 @@ public class DndSpellCommand extends BotCommand implements HelpSupport {
                 return;
             }
 
-            String spellIndex = APIController.getIndexFromName(args[1]);
-            var spellData = APIController.getSpellDataWithIndex(spellIndex);
+            String spellIndex = DnDAPIController.getIndexFromName(args[1]);
+            var spellData = DnDAPIController.getSpellDataWithIndex(spellIndex);
 
             if (spellData == null) {
                 event.getChannel().sendMessage("Nie znaleziono zaklecia o takiej nazwie").queue();

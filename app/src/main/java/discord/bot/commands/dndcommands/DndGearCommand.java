@@ -7,7 +7,7 @@ import discord.bot.CommandPermissions;
 import discord.bot.HelpSupport;
 import discord.bot.CommandPermissions.Permission;
 import discord.bot.commands.BotCommand;
-import discord.bot.commands.dndcommands.dndapi.APIController;
+import discord.bot.commands.dndcommands.dndapi.DnDAPIController;
 import discord.bot.commands.dndcommands.dndapi.models.APIReference;
 import discord.bot.commands.dndcommands.dndapi.models.equipment.ArmorData;
 import discord.bot.commands.dndcommands.dndapi.models.equipment.EquipmentPackContent;
@@ -38,8 +38,8 @@ public class DndGearCommand extends BotCommand implements HelpSupport {
                 return;
             }
 
-            String gearIndex = APIController.getIndexFromName(args[1]);
-            var gearData = APIController.getEquipmentWithIndex(gearIndex);
+            String gearIndex = DnDAPIController.getIndexFromName(args[1]);
+            var gearData = DnDAPIController.getEquipmentWithIndex(gearIndex);
 
             if (gearData == null) {
                 event.getChannel().sendMessage("Nie znaleziono przedmiotu o takiej nazwie").queue();

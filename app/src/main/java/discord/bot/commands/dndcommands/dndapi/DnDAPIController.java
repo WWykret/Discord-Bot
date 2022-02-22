@@ -16,7 +16,7 @@ import discord.bot.commands.dndcommands.dndapi.models.equipment.GearData;
 import discord.bot.commands.dndcommands.dndapi.models.equipment.WeaponData;
 import discord.bot.commands.dndcommands.dndapi.models.spells.SpellData;
 
-public class APIController {
+public class DnDAPIController {
     private static final String API_ENDPOINT = "https://www.dnd5eapi.co/api/";
 
     public static SpellData getSpellDataWithIndex(String spellIndex) {
